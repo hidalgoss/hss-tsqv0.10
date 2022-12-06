@@ -5,13 +5,13 @@
 #include <memory>
 #include <mutex>
 #include <condition_variable>
-
+#include "hss_iqueue.hpp"
 
 namespace hss
 {
 
   template <typename T>
-  class thread_safe_queue
+  class thread_safe_queue : public IQueue<T>
   {
   private:
     mutable std::mutex mut;
@@ -19,11 +19,11 @@ namespace hss
     std::condition_variable data_cond;
 
   public:
-    thread_safe_queue()
+    thread_safe_queue() : IQueue<T>()
     {
     }
 
-    thread_safe_queue(thread_safe_queue const &other)
+    thread_safe_queue(thread_safe_queue const &other) : IQueue<T>()
     {
       std::lock_guard<std::mutex> lk(other.mut);
       data_queue = other.data_queue;
